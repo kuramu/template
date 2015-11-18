@@ -1,0 +1,86 @@
+deny from host
+上記一行ですべてのアクセスを制限します
+
+.htaccess
+
+最初に記述する
+
+<Files ~ "^\.(htaccess|htpasswd)$">
+
+deny from all
+
+</Files>
+
+中に下記のもの
+
+最下部に
+
+order deny,allow
+
+
+
+ファイル一覧の拒否
+
+Options -Indexes
+
+
+301リダイレクトを使った「WWWあり」と「WWWなし」の統一 
+
+「wwwあり」に統一する場合
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^sample\.com
+RewriteRule ^(.*)$ http://www.sample.com/$1 [R=301,L]
+
+「wwwなし」に統一する場合
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^www.sample\.com
+RewriteRule ^(.*)$ http://sample.com/$1 [R=301,L]
+
+間違えないようにコピペして、「sample.com」を自分のドメインに置き換えてください。
+「￥（円マーク）」は、環境によっては「/（スラッシュ）」をひっくり返したバックスラッシュで表示されます。
+
+index.html「あり・なし」のURL正規化  
+
+  「http://www.exmample.com/」と「http://www.example.com/index.html」を正規化し、「http://www.exmample.com/」にそろえる時は、.htaccessに次のように記述します。
+
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{THE_REQUEST} ^.*/index.html
+RewriteRule ^(.*)index.html$ http://www.example.com/$1 [R=301,L]
+
+上記全まとめて
+wwwあり
+<Files ~ "^\.(htaccess|htpasswd)$">
+deny from all
+</Files>
+Options -Indexes
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^beacon-lab\.com
+RewriteRule ^(.*)$ http://www.beacon-lab.com/$1 [R=301,L]
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{THE_REQUEST} ^.*/index.html
+RewriteRule ^(.*)index.html$ http://www.beacon-lab.com/$1 [R=301,L]
+order deny,allow
+
+
+上記全まとめて
+wwwなし
+<Files ~ "^\.(htaccess|htpasswd)$">
+deny from all
+</Files>
+Options -Indexes
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^www.ghostripper\.co
+RewriteRule ^(.*)$ http://ghostripper.co/$1 [R=301,L]
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{THE_REQUEST} ^.*/index.html
+RewriteRule ^(.*)index.html$ http://ghostripper.co/$1 [R=301,L]
+order deny,allow
+
+最後に改行する
